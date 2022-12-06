@@ -15,10 +15,10 @@ import os.path
 import inspect
 import functools
 import collections
-import ruamel.yaml
+import ruamel_yaml
 import operator as op
 from io import StringIO
-from ruamel.yaml.representer import RepresenterError
+from ruamel_yaml.representer import RepresenterError
 
 
 # NOTE: Empty dict as default parameter is fine here since overrides are never
@@ -253,10 +253,10 @@ def dump_hyperpyyaml(yaml_tree, output_stream, *args, **kwargs):
     >>> stringio.getvalue()
     'a: !PLACEHOLDER\nb: !ref <a>\n'
     """
-    ruamel_yaml = ruamel.yaml.YAML()
-    ruamel_yaml.representer.add_representer(RefTag, RefTag.to_yaml)
-    ruamel_yaml.representer.add_representer(Placeholder, Placeholder.to_yaml)
-    ruamel_yaml.dump(yaml_tree, output_stream, *args, **kwargs)
+    ruamel_yaml_yaml = ruamel_yaml.YAML()
+    ruamel_yaml_yaml.representer.add_representer(RefTag, RefTag.to_yaml)
+    ruamel_yaml_yaml.representer.add_representer(Placeholder, Placeholder.to_yaml)
+    ruamel_yaml_yaml.dump(yaml_tree, output_stream, *args, **kwargs)
 
 
 def resolve_references(yaml_stream, overrides=None, overrides_must_match=False):
@@ -298,19 +298,19 @@ def resolve_references(yaml_stream, overrides=None, overrides_must_match=False):
 
     # Load once to store references and apply overrides
     # using ruamel.yaml to preserve the tags
-    ruamel_yaml = ruamel.yaml.YAML()
-    preview = ruamel_yaml.load(yaml_stream)
+    ruamel_yaml_yaml = ruamel.yaml.YAML()
+    preview = ruamel_yaml_yaml.load(yaml_stream)
 
     if overrides is not None and overrides != "":
         if isinstance(overrides, str):
-            overrides = ruamel_yaml.load(overrides)
+            overrides = ruamel_yaml_yaml.load(overrides)
         recursive_update(preview, overrides, must_match=overrides_must_match)
     _walk_tree_and_resolve("root", preview, preview, overrides, file_path)
 
     yaml_stream = StringIO()
     try:
         # Dump back to string so we can load with bells and whistles
-        ruamel_yaml.dump(preview, yaml_stream)
+        ruamel_yaml_yaml.dump(preview, yaml_stream)
         yaml_stream.seek(0)
     except RepresenterError as e:
         e.args = (e.args[0] + ". Please use the !apply tag instead.",)
@@ -395,8 +395,8 @@ def _walk_tree_and_resolve(key, current_node, tree, overrides, file_path):
                 included_yaml = resolve_references(f, overrides)
 
             # Append resolved yaml to current node
-            ruamel_yaml = ruamel.yaml.YAML()
-            current_node = ruamel_yaml.load(included_yaml)
+            ruamel_yaml_yaml = ruamel.yaml.YAML()
+            current_node = ruamel_yaml_yaml.load(included_yaml)
 
         # Get the return value of a function
         elif tag_value.startswith("!applyref:"):
