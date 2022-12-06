@@ -4,6 +4,7 @@ Authors
  * Peter Plantinga 2020
  * Aku Rouhe 2020
  * Jianchen Li 2022
+ * Samson Koelle 2022
 """
 
 import re
