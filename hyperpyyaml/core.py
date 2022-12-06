@@ -243,7 +243,7 @@ def dump_hyperpyyaml(yaml_tree, output_stream, *args, **kwargs):
     output_stream : stream
         A file stream for putting the yaml
     *args, **kwargs
-        Arguments to forward to ruamel.yaml.YAML().dump()
+        Arguments to forward to ruamel_yaml.YAML().dump()
 
     Example
     -------
@@ -297,8 +297,8 @@ def resolve_references(yaml_stream, overrides=None, overrides_must_match=False):
         file_path = os.path.dirname(os.path.realpath(yaml_stream.name))
 
     # Load once to store references and apply overrides
-    # using ruamel.yaml to preserve the tags
-    ruamel_yaml_yaml = ruamel.yaml.YAML()
+    # using ruamel_yaml to preserve the tags
+    ruamel_yaml_yaml = ruamel_yaml.YAML()
     preview = ruamel_yaml_yaml.load(yaml_stream)
 
     if overrides is not None and overrides != "":
@@ -330,9 +330,9 @@ def _walk_tree_and_resolve(key, current_node, tree, overrides, file_path):
     key : str
         The fully-qualified path to current node.
     current_node : node
-        A node in the yaml tree loaded with ruamel.yaml.
+        A node in the yaml tree loaded with ruamel_yaml.
     tree : node
-        The base node in the yaml tree loaded with ruamel.yaml.
+        The base node in the yaml tree loaded with ruamel_yaml.
     overrides : dict
         A set of overrides to pass to any ``!includes:`` files.
     file_path : str
@@ -395,7 +395,7 @@ def _walk_tree_and_resolve(key, current_node, tree, overrides, file_path):
                 included_yaml = resolve_references(f, overrides)
 
             # Append resolved yaml to current node
-            ruamel_yaml_yaml = ruamel.yaml.YAML()
+            ruamel_yaml_yaml = ruamel_yaml.YAML()
             current_node = ruamel_yaml_yaml.load(included_yaml)
 
         # Get the return value of a function
@@ -589,7 +589,7 @@ def deref(ref, full_tree, copy_mode=False):
 
     # To refer to an attribute, we add this special node
     if attr is not None:
-        node = ruamel.yaml.comments.CommentedSeq()
+        node = ruamel_yaml.comments.CommentedSeq()
         node += [branch, attr]
         node.yaml_set_tag("!apply:getattr")
         return node
